@@ -2,9 +2,10 @@ from tespy.components import (Source, Sink, Compressor)
 from tespy.connections import Connection, Bus
 from tespy.tools import ExergyAnalysis
 from tespy.networks import Network
+import plotly.graph_objects as go
 
 # fluids
-f = 'Hydrogen'
+f = 'H2'
 ff = {f: 1}
 
 # network
@@ -43,3 +44,14 @@ nw.print_results()
 ean = ExergyAnalysis(network=nw, E_F=[motor], E_P=[hydrogen])
 ean.analyse(1.013, 25)
 ean.print_results()
+
+# grassmann diagram
+links, nodes = ean.generate_plotly_sankey_input()
+fig = go.Figure(go.Sankey(
+    arrangement="snap",
+    node={
+        "label": nodes,
+        'pad': 11,
+        'color': 'orange'},
+    link=links))
+fig.show()
